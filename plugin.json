@@ -1,0 +1,14 @@
+{
+  "id": "tutorials",
+  "name": "Tutorials",
+  "version": "0.1.0",
+  "private": false,
+  "screen": "screen.html",
+  "script": "screen.js",
+  "routes": "routes.py",
+  "settings": {
+    "server_files": [
+      "tutorials/"
+    ]
+  }
+}

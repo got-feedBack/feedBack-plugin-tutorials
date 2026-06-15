@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "intro-bends",
+  "title": "Intro to Bends",
+  "author": "Slopsmith",
+  "techniques": ["bend", "vibrato"],
+  "lessons": [
+    { "id": "l1", "title": "Half-step bends",
+      "video": { "type": "youtube", "src": "https://www.youtube.com/watch?v=n_8fHEA_7d4" },
+      "exercise": { "sloppak": "tutorials-builtin/intro-bends/Tutorial_Intro_to_Bends_L1.sloppak", "arrangement": "" },
+      "pass": { "accuracy": 0.7 }, "mastery": { "accuracy": 0.9, "speed": 1.0 },
+      "xp": { "pass": 100, "mastery": 250 }, "techniques": ["bend"] },
+    { "id": "l2", "title": "Full-step bends at speed",
+      "video": { "type": "youtube", "src": "https://www.youtube.com/watch?v=dftdE1rj1Ac" },
+      "exercise": { "sloppak": "tutorials-builtin/intro-bends/Tutorial_Intro_to_Bends_L2.sloppak", "arrangement": "" },
+      "pass": { "accuracy": 0.7 }, "mastery": { "accuracy": 0.9, "speed": 1.0 },
+      "xp": { "pass": 120, "mastery": 300 }, "techniques": ["bend"] },
+    { "id": "l3", "title": "Bend + vibrato combo",
+      "video": { "type": "youtube", "src": "https://www.youtube.com/watch?v=TrYWfqO2qmc" },
+      "exercise": { "sloppak": "tutorials-builtin/intro-bends/Tutorial_Intro_to_Bends_L3.sloppak", "arrangement": "" },
+      "pass": { "accuracy": 0.7 }, "mastery": { "accuracy": 0.9, "speed": 1.0 },
+      "xp": { "pass": 150, "mastery": 400 }, "techniques": ["bend", "vibrato"] }
+  ]
+}

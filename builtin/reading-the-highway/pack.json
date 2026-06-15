@@ -1,0 +1,300 @@
+{
+  "schema": 1,
+  "id": "reading-the-highway",
+  "title": "Reading the Highway",
+  "author": "Slopsmith",
+  "techniques": [
+    "bend",
+    "chords",
+    "dead-note",
+    "hammer-on",
+    "handshape",
+    "harmonic",
+    "legato",
+    "mute",
+    "notes",
+    "palm-mute",
+    "pull-off",
+    "slide",
+    "sustain",
+    "tap",
+    "tremolo"
+  ],
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Notes & sustain",
+      "video": {
+        "type": "file",
+        "src": "videos/l1.webm"
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L1.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "notes",
+        "sustain"
+      ]
+    },
+    {
+      "id": "l2",
+      "title": "Chords & handshapes",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L2.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "chords",
+        "handshape"
+      ]
+    },
+    {
+      "id": "l3",
+      "title": "Bends",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L3.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "bend"
+      ]
+    },
+    {
+      "id": "l4",
+      "title": "Slides",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L4.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "slide"
+      ]
+    },
+    {
+      "id": "l5",
+      "title": "Hammer-on & pull-off",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L5.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "hammer-on",
+        "pull-off",
+        "legato"
+      ]
+    },
+    {
+      "id": "l6",
+      "title": "Harmonics",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L6.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "harmonic"
+      ]
+    },
+    {
+      "id": "l7",
+      "title": "Palm mute",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L7.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "palm-mute"
+      ]
+    },
+    {
+      "id": "l8",
+      "title": "Muted / dead notes",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L8.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "dead-note",
+        "mute"
+      ]
+    },
+    {
+      "id": "l9",
+      "title": "Tremolo & taps",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L9.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 100,
+        "mastery": 250
+      },
+      "techniques": [
+        "tremolo",
+        "tap"
+      ]
+    },
+    {
+      "id": "l10",
+      "title": "Combined arrangement",
+      "video": {
+        "type": "file",
+        "src": ""
+      },
+      "exercise": {
+        "sloppak": "tutorials-builtin/reading-the-highway/Tutorial_Reading_the_Highway_L10.sloppak",
+        "arrangement": ""
+      },
+      "pass": {
+        "accuracy": 0.7
+      },
+      "mastery": {
+        "accuracy": 0.9,
+        "speed": 1.0
+      },
+      "xp": {
+        "pass": 200,
+        "mastery": 500
+      },
+      "techniques": [
+        "bend",
+        "slide",
+        "hammer-on",
+        "pull-off",
+        "harmonic",
+        "palm-mute",
+        "dead-note",
+        "tremolo",
+        "tap",
+        "chords"
+      ]
+    }
+  ]
+}

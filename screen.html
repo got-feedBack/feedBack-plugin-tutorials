@@ -1,0 +1,266 @@
+<!--
+  Tutorials plugin — root container.
+
+  All three modes (browse, lesson, author) render into #tutorials-root.
+  screen.js owns the SPA routing via an in-memory state machine (not hash).
+
+  Styles are inlined because the plugin loader only auto-serves
+  screen.html / screen.js / settings.html / tour.json (see
+  plugins/__init__.py:1309). All selectors are prefixed with
+  #plugin-tutorials so the inline rules cannot leak into the host app.
+-->
+<style id="plugin-tutorials-styles">
+  /* Core wraps every plugin screen in <div id="plugin-{id}" class="screen">
+     and toggles `.active` to show/hide. We must NOT set `display: flex`
+     unconditionally — id-specificity would override `.screen { display: none }`
+     and leak the tutorials UI under every other screen. Layout properties
+     gate on `.active`; styling-only props (colors, fonts, CSS vars) stay
+     on the bare id so children inherit them regardless of visibility. */
+  /* Palette mapped to the app's shared design tokens (see
+     static/index.html tailwind.config) so the Tutorials screen matches
+     the rest of Slopsmith — same dark surfaces and accent the Minigames
+     hub uses. Font is intentionally NOT overridden so we inherit the
+     host app font, like Minigames does. */
+  #plugin-tutorials {
+    --tut-bg: #050508;          /* dark-900 — page background */
+    --tut-panel: #0a0a12;       /* dark-800 — cards, modals */
+    --tut-border: #10101e;      /* dark-700 — borders, secondary buttons */
+    --tut-border-hover: #181830;/* dark-600 — hover surfaces */
+    --tut-text: #ffffff;        /* text-white */
+    --tut-muted: #9ca3af;       /* gray-400 */
+    --tut-accent: #4080e0;      /* accent.DEFAULT */
+    --tut-accent-light: #60a0ff;/* accent.light */
+    --tut-good: #5ed29a;
+    --tut-warn: #f0b04f;
+    --tut-bad: #e06868;
+    color: var(--tut-text);
+  }
+  #plugin-tutorials.active {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Match the Minigames hub: max-w-5xl (64rem) centered, px-6 pt-24
+       pb-16. Core navbar is `fixed top-0 h-16`; pt-24 (6rem) clears it. */
+    width: 100%;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+  }
+  #plugin-tutorials .tut-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    border-bottom: 1px solid var(--tut-border);
+    padding-bottom: 0.75rem;
+  }
+  #plugin-tutorials .tut-title h1 { font-size: 2.25rem; font-weight: 700; line-height: 1.1; margin: 0 0 0.25rem; }
+  #plugin-tutorials .tut-subtitle { margin: 0; color: var(--tut-muted); font-size: 0.875rem; }
+  #plugin-tutorials .tut-modes {
+    display: flex; gap: 0.25rem;
+    background: var(--tut-panel); border: 1px solid var(--tut-border);
+    border-radius: 8px; padding: 0.25rem;
+  }
+  #plugin-tutorials .tut-mode {
+    background: transparent; border: 0; color: var(--tut-muted);
+    padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; font-weight: 500;
+  }
+  #plugin-tutorials .tut-mode[aria-pressed="true"] { background: var(--tut-border); color: var(--tut-text); }
+  #plugin-tutorials .tut-root { min-height: 60vh; }
+  #plugin-tutorials .tut-loading,
+  #plugin-tutorials .tut-empty {
+    color: var(--tut-muted); padding: 2rem; text-align: center;
+    border: 1px dashed var(--tut-border); border-radius: 12px;
+  }
+  #plugin-tutorials .tut-pack-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;
+  }
+  #plugin-tutorials .tut-pack-card {
+    background: var(--tut-panel); border: 1px solid var(--tut-border);
+    border-radius: 12px; padding: 1rem; cursor: pointer; transition: border-color 120ms;
+  }
+  #plugin-tutorials .tut-pack-card:hover { border-color: var(--tut-accent); }
+  #plugin-tutorials .tut-pack-card h3 { margin: 0 0 0.4rem; font-size: 1.1rem; }
+  #plugin-tutorials .tut-pack-cover {
+    aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden;
+    background: var(--tut-bg); margin: -0.25rem -0.25rem 0.7rem;
+    border: 1px solid var(--tut-border);
+  }
+  #plugin-tutorials .tut-pack-cover img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  #plugin-tutorials .tut-pack-cover-placeholder {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tut-muted); font-size: 2.5rem; font-weight: 700;
+    background: linear-gradient(135deg, #0a0a12 0%, #181830 100%);
+  }
+  #plugin-tutorials .tut-cover-preview {
+    width: 120px; height: 68px; border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--tut-border); background: var(--tut-bg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #plugin-tutorials .tut-cover-preview img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  #plugin-tutorials .tut-pack-author { color: var(--tut-muted); font-size: 0.85rem; margin: 0 0 0.6rem; }
+  #plugin-tutorials .tut-progress-bar {
+    height: 6px; background: var(--tut-border); border-radius: 3px; overflow: hidden; margin-bottom: 0.5rem;
+  }
+  #plugin-tutorials .tut-progress-fill { height: 100%; background: var(--tut-accent); transition: width 200ms; }
+  #plugin-tutorials .tut-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  #plugin-tutorials .tut-tag {
+    background: var(--tut-border); color: var(--tut-muted);
+    padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.75rem;
+  }
+  #plugin-tutorials .tut-lesson {
+    display: grid; grid-template-columns: 1fr; gap: 1.25rem; max-width: 980px; margin: 0 auto;
+  }
+  #plugin-tutorials .tut-video {
+    background: black; border: 1px solid var(--tut-border);
+    border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9;
+  }
+  #plugin-tutorials .tut-video video,
+  #plugin-tutorials .tut-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  #plugin-tutorials .tut-exercise {
+    background: var(--tut-panel); border: 1px solid var(--tut-border);
+    border-radius: 12px; padding: 1rem 1.25rem;
+  }
+  #plugin-tutorials .tut-exercise h2 { margin: 0 0 0.3rem; font-size: 1.2rem; }
+  #plugin-tutorials .tut-thresholds { color: var(--tut-muted); font-size: 0.9rem; margin: 0 0 1rem; }
+  #plugin-tutorials .tut-btn {
+    background: var(--tut-accent); color: #ffffff; border: 0;
+    padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer;
+    transition: background-color 120ms;
+  }
+  #plugin-tutorials .tut-btn:hover:not([disabled]) { background: var(--tut-accent-light); }
+  #plugin-tutorials .tut-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+  #plugin-tutorials .tut-btn-ghost {
+    background: var(--tut-border); color: var(--tut-text); border: 0;
+  }
+  #plugin-tutorials .tut-btn-ghost:hover:not([disabled]) { background: var(--tut-border-hover); }
+  #plugin-tutorials .tut-result {
+    margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px;
+    border: 1px solid var(--tut-border); background: var(--tut-bg);
+  }
+  #plugin-tutorials .tut-result.is-pass { border-color: var(--tut-good); }
+  #plugin-tutorials .tut-result.is-mastery { border-color: var(--tut-accent); }
+  #plugin-tutorials .tut-result.is-fail { border-color: var(--tut-warn); }
+  #plugin-tutorials .tut-lesson-list {
+    display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;
+  }
+  #plugin-tutorials .tut-lesson-row {
+    position: relative; display: flex; justify-content: space-between;
+    align-items: center; gap: 0.75rem;
+    background: linear-gradient(135deg, #0a0a12 0%, #181830 100%);
+    background-size: cover; background-position: center;
+    border: 1px solid var(--tut-border);
+    border-radius: 12px; padding: 1rem 1.25rem; cursor: pointer;
+    min-height: 110px; overflow: hidden;
+    transition: border-color 120ms, transform 120ms;
+  }
+  #plugin-tutorials .tut-lesson-row:hover {
+    border-color: var(--tut-accent);
+    transform: translateY(-1px);
+  }
+  /* When a lesson has a thumbnail, stack a full banner on top of a caption
+     strip. The thumbs are self-contained 5:1 banners; the .tut-lesson-thumb
+     box is locked to that aspect ratio and `contain`s the image so 100% of
+     it is always visible and it only ever scales uniformly with the
+     viewport (never crops/reframes on resize). The lesson name + status
+     live in the caption below, so names stay visible without covering art. */
+  #plugin-tutorials .tut-lesson-row.has-thumb {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    min-height: 0;
+  }
+  #plugin-tutorials .tut-lesson-thumb {
+    width: 100%;
+    aspect-ratio: 5 / 1;
+    background-color: var(--tut-bg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  #plugin-tutorials .tut-lesson-caption {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 0.75rem; padding: 0.6rem 1rem;
+    border-top: 1px solid var(--tut-border);
+  }
+  /* Dark gradient overlay (used only by no-thumbnail rows) so the title +
+     tags + state read against the placeholder gradient. */
+  #plugin-tutorials .tut-lesson-overlay {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgba(5,5,8,0.88) 0%,
+      rgba(5,5,8,0.55) 35%,
+      rgba(5,5,8,0.55) 65%,
+      rgba(5,5,8,0.88) 100%
+    );
+  }
+  #plugin-tutorials .tut-lesson-meta,
+  #plugin-tutorials .tut-lesson-state {
+    position: relative; /* sit above the absolute overlay */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+  #plugin-tutorials .tut-lesson-meta strong { font-size: 1.05rem; }
+  #plugin-tutorials .tut-lesson-tags {
+    color: rgba(230,234,242,0.75);
+    font-size: 0.85rem; margin-top: 0.2rem;
+  }
+  #plugin-tutorials .tut-lesson-state { font-size: 0.8rem; color: var(--tut-muted); }
+  #plugin-tutorials .tut-lesson-state.is-pass { color: var(--tut-good); }
+  #plugin-tutorials .tut-lesson-state.is-mastery { color: var(--tut-accent); }
+  #plugin-tutorials .tut-author {
+    display: grid; grid-template-columns: 280px 1fr; gap: 1rem;
+  }
+  #plugin-tutorials .tut-author-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  #plugin-tutorials .tut-author-pack {
+    background: var(--tut-panel); border: 1px solid var(--tut-border);
+    border-radius: 8px; padding: 0.5rem 0.75rem; cursor: pointer;
+  }
+  #plugin-tutorials .tut-author-pack[aria-selected="true"] { border-color: var(--tut-accent); }
+  #plugin-tutorials .tut-author-form {
+    background: var(--tut-panel); border: 1px solid var(--tut-border);
+    border-radius: 12px; padding: 1rem 1.25rem;
+  }
+  #plugin-tutorials .tut-form-row { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem; }
+  #plugin-tutorials .tut-form-row label { color: var(--tut-muted); font-size: 0.85rem; }
+  #plugin-tutorials input[type="text"],
+  #plugin-tutorials input[type="url"],
+  #plugin-tutorials input[type="number"],
+  #plugin-tutorials select,
+  #plugin-tutorials textarea {
+    background: var(--tut-bg); color: var(--tut-text);
+    border: 1px solid var(--tut-border); border-radius: 6px;
+    padding: 0.45rem 0.6rem; font: inherit;
+  }
+  #plugin-tutorials .tut-lesson-editor {
+    background: var(--tut-bg); border: 1px solid var(--tut-border);
+    border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 0.75rem;
+  }
+  #plugin-tutorials .tut-lesson-editor h4 { margin: 0 0 0.5rem; }
+  #plugin-tutorials .tut-row-buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+  #plugin-tutorials .tut-tag-input { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+  #plugin-tutorials .tut-tag-chip {
+    background: var(--tut-border); color: var(--tut-text);
+    padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.8rem;
+    display: inline-flex; align-items: center; gap: 0.3rem;
+  }
+  #plugin-tutorials .tut-tag-chip button { background: transparent; border: 0; color: var(--tut-muted); cursor: pointer; }
+</style>
+<header class="tut-header">
+  <div class="tut-title">
+    <h1>Tutorials</h1>
+    <p class="tut-subtitle">Watch, then drill. Earn XP for every pass.</p>
+  </div>
+  <nav class="tut-modes" aria-label="Tutorials mode">
+    <button type="button" class="tut-mode" data-mode="browse" aria-pressed="true">Browse</button>
+    <button type="button" class="tut-mode" data-mode="author" aria-pressed="false">Author</button>
+  </nav>
+</header>
+<main id="tutorials-root" class="tut-root">
+  <div class="tut-loading">Loading tutorials…</div>
+</main>
