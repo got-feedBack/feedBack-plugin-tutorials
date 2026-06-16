@@ -38,7 +38,7 @@ from pathlib import Path
 
 # ── Musical helpers ──────────────────────────────────────────────────────────
 
-# Rocksmith string index: 0 = LOW E, 5 = HIGH E (per lib/gp2rs.py:459 —
+# the string index: 0 = LOW E, 5 = HIGH E (per lib/gp2rs.py:459 —
 # "Convert GP string number (1=high) to RS string index (0=low)."). The
 # .sloppak arrangement JSON `s` field follows this convention, so the
 # highway renderer reads (s, f) using this open-pitch table. Match it
