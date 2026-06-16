@@ -554,8 +554,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=Path(__file__).resolve().parent / "sloppaks",
                         help="Directory to write the .sloppak files into.")
-    parser.add_argument("--dlc", type=Path, default=Path.home() / ".local/share/Steam/steamapps/common/Rocksmith2014/dlc",
-                        help="Library / DLC directory to also copy the sloppaks into (set to '-' to skip).")
+    parser.add_argument("--dlc", type=Path, default=Path.home() / ".local/share/feedback",
+                        help="Library directory to also copy the sloppaks into (set to '-' to skip).")
     args = parser.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
