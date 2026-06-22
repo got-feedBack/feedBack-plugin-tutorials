@@ -10,5 +10,8 @@
     "server_files": [
       "tutorials/"
     ]
-  }
+  },
+  "category": "practice",
+  "description": "In-app video tutorials and lessons.",
+  "icon": "assets/thumb.svg"
 }
