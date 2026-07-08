@@ -1,5 +1,8 @@
 """Run recording, pass/mastery thresholds, progress persistence."""
 
+import json
+
+import routes
 from conftest import make_manifest
 
 RUNS = "/api/plugins/tutorials/runs"
@@ -69,10 +72,8 @@ def test_default_thresholds(client, pack):
 def test_null_thresholds_in_manifest_do_not_crash(client, pack, tmp_path):
     # Simulate a manifest edited on disk to contain explicit nulls,
     # bypassing PUT validation: record_run must fall back to defaults.
-    import routes
     _install_lesson(client, pack, {"id": "l1"})
     mpath = routes._state["packs_dir"] / pack / "pack.json"
-    import json
     data = json.loads(mpath.read_text(encoding="utf-8"))
     data["lessons"][0]["pass"] = {"accuracy": None}
     data["lessons"][0]["mastery"] = None
@@ -114,7 +115,6 @@ def test_run_validation_422(client, pack):
 
 
 def test_progress_survives_corrupt_file(client, pack):
-    import routes
     _install_lesson(client, pack, {"id": "l1"})
     _run(client, pack, "l1", score=10, accuracy=0.9)
     routes._state["progress_path"].write_text("{not json", encoding="utf-8")

@@ -65,7 +65,7 @@ def test_update_pack_roundtrip(client, pack):
     assert r.status_code == 200
 
     r = client.get(f"/api/plugins/tutorials/packs/{pack}")
-    assert [l["id"] for l in r.json()["lessons"]] == ["lesson-1"]
+    assert [lesson["id"] for lesson in r.json()["lessons"]] == ["lesson-1"]
 
 
 def test_update_missing_pack_404(client):
